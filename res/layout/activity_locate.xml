@@ -26,7 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/button1"
         android:layout_alignBottom="@+id/button1"
-        android:layout_toRightOf="@+id/button1"
-        android:text="TextView" />
+        android:layout_toRightOf="@+id/button1" />
 
 </RelativeLayout>

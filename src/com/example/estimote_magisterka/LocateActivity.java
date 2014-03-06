@@ -2,12 +2,15 @@ package com.example.estimote_magisterka;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Delayed;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.content.res.Resources.Theme;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ import android.widget.Toast;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
+import com.estimote.sdk.Utils;
 
 public class LocateActivity extends Activity {
 
@@ -71,24 +75,39 @@ public class LocateActivity extends Activity {
 				// TODO Auto-generated method stub
 				if (beaconList.getCount() != 0) {
 
+					final CountDownLatch latch = new CountDownLatch(1);
+					// double sum;
 					new Thread(new Runnable() {
-						double sum = 0;
+
+						Handler handler = new Handler();
 
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							/*for (int i = 0; i < 50; i++) {
-								sum += beaconAdapter.getDistance();
-								try {
+							double sum = 0;
+							final int N = 5;
+							try {
+								for (int i = 0; i < N; i++) {
+									sum += beaconAdapter.getDistance();
 									Thread.sleep(200);
-								} catch (InterruptedException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
 								}
-							}*/
-							averageDistance.setText("a");
+							} catch (InterruptedException e) {
+								Thread.currentThread().interrupt();
+							}
+							handler.post(new Runnable() {
+
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+									averageDistance.setText("nie puste");
+									/*
+									 * averageDistance.setText(String.format(
+									 * "%.2fm", sum / N));
+									 */
+								}
+							});
 						}
-					});
+					}).start();
 
 				} else
 					averageDistance.setText("puste");

@@ -7,26 +7,40 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
 	private Button startButton;
-	
+	private Button calibrateButton;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		startButton = (Button) findViewById(R.id.button1);
+		calibrateButton = (Button) findViewById(R.id.button2);
 		startButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(getApplicationContext(), LocateActivity.class);
+				Intent intent = new Intent(getApplicationContext(),
+						LocateActivity.class);
 				startActivity(intent);
 			}
 		});
-		
+
+		calibrateButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getApplicationContext(), "Cannot calibrate",
+						Toast.LENGTH_LONG).show();
+			}
+		});
+
 	};
 
 	@Override
