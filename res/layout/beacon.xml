@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView1"
-            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="130dp"
             android:tag="mac" />
 
         <TextView
@@ -47,6 +47,38 @@
             android:layout_below="@+id/textView2"
             android:tag="distance"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView4"
+            android:layout_marginLeft="30dp"
+            android:text="@string/rssi" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView2"
+            android:layout_below="@+id/textView4"
+            android:tag="rssi" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView6"
+            android:layout_marginLeft="30dp"
+            android:text="@string/measured_power" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView2"
+            android:layout_below="@+id/textView6"
+            android:tag="measured_power" />
     </RelativeLayout>
 
 </LinearLayout>

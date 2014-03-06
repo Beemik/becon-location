@@ -2,6 +2,7 @@ package com.example.estimote_magisterka;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Delayed;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -11,8 +12,11 @@ import android.os.RemoteException;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
@@ -26,6 +30,8 @@ public class LocateActivity extends Activity {
 	private Region beaconsRegion = new Region("regionId", null, null, null);
 	private BeaconManager beaconManager;
 	private BeaconAdapter beaconAdapter;
+	private Button getResultsButton;
+	private TextView averageDistance;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +39,13 @@ public class LocateActivity extends Activity {
 		setContentView(R.layout.activity_locate);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
+		averageDistance = (TextView) findViewById(R.id.textView1);
+
 		beaconAdapter = new BeaconAdapter(this, R.layout.beacon);
-		ListView beaconList = (ListView) findViewById(R.id.listView1);
+		final ListView beaconList = (ListView) findViewById(R.id.listView1);
 		beaconList.setAdapter(beaconAdapter);
 		beaconList.setOnItemClickListener(createOnItemClickListener());
+		getResultsButton = (Button) findViewById(R.id.button1);
 
 		beaconManager = new BeaconManager(this);
 		beaconManager.setRangingListener(new BeaconManager.RangingListener() {
@@ -52,6 +61,37 @@ public class LocateActivity extends Activity {
 						beaconAdapter.replaceWith(arg1);
 					}
 				});
+			}
+		});
+
+		getResultsButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (beaconList.getCount() != 0) {
+
+					new Thread(new Runnable() {
+						double sum = 0;
+
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							/*for (int i = 0; i < 50; i++) {
+								sum += beaconAdapter.getDistance();
+								try {
+									Thread.sleep(200);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}*/
+							averageDistance.setText("a");
+						}
+					});
+
+				} else
+					averageDistance.setText("puste");
 			}
 		});
 	}
