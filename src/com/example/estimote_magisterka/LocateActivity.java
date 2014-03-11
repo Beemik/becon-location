@@ -1,22 +1,20 @@
 package com.example.estimote_magisterka;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Delayed;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.content.res.Resources.Theme;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.RemoteException;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,7 +33,13 @@ public class LocateActivity extends Activity {
 	private BeaconManager beaconManager;
 	private BeaconAdapter beaconAdapter;
 	private Button getResultsButton;
-	private TextView averageDistance;
+	private ListView averageDistanceListView;
+	private TextView averageDistanceTextView;
+
+	private boolean getResult;
+	private Double[] sumDistance;
+	private ArrayList<String> macAddress;
+	private int count = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +47,9 @@ public class LocateActivity extends Activity {
 		setContentView(R.layout.activity_locate);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		averageDistance = (TextView) findViewById(R.id.textView1);
+		getResult = false;
+		averageDistanceListView = (ListView) findViewById(R.id.listView2);
+		averageDistanceTextView = (TextView) findViewById(R.id.textView1);
 
 		beaconAdapter = new BeaconAdapter(this, R.layout.beacon);
 		final ListView beaconList = (ListView) findViewById(R.id.listView1);
@@ -63,6 +69,43 @@ public class LocateActivity extends Activity {
 					public void run() {
 						// TODO Auto-generated method stub
 						beaconAdapter.replaceWith(arg1);
+
+						final int N = 5;
+						int beaconCount = beaconAdapter.getCount();
+
+						if (getResult == true && beaconCount != 0) {
+							averageDistanceTextView.setText("czekaj..");
+							for (int i = 0; i < beaconCount; i++) {
+								for (int j = 0; j < beaconCount; j++) {
+									if (count == N)
+										getResult = false;
+
+									else if (macAddress.get(j).equals(
+											beaconAdapter.getItem(i)
+													.getMacAddress())) {
+										sumDistance[j] += Utils
+												.computeAccuracy(beaconAdapter
+														.getItem(i));
+										count++;
+									}
+									averageDistanceTextView.setText(String
+											.format("czekaj.. %d", count));
+								}
+							}
+						} else if (count == N) {
+							count = 0;
+							ArrayList<String> tmpArrayList = new ArrayList<String>();
+							for (int i = 0; i < beaconCount; i++)
+								tmpArrayList.add(String.format("%s : %.2fm",
+										macAddress.get(i), sumDistance[i] / N));
+							ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+									getApplicationContext(),
+									R.layout.distance_row, tmpArrayList);
+
+							averageDistanceTextView.setText("Results:");
+							averageDistanceListView.setAdapter(adapter);
+							macAddress.clear();
+						}
 					}
 				});
 			}
@@ -73,44 +116,16 @@ public class LocateActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (beaconList.getCount() != 0) {
-
-					final CountDownLatch latch = new CountDownLatch(1);
-					// double sum;
-					new Thread(new Runnable() {
-
-						Handler handler = new Handler();
-
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							double sum = 0;
-							final int N = 5;
-							try {
-								for (int i = 0; i < N; i++) {
-									sum += beaconAdapter.getDistance();
-									Thread.sleep(200);
-								}
-							} catch (InterruptedException e) {
-								Thread.currentThread().interrupt();
-							}
-							handler.post(new Runnable() {
-
-								@Override
-								public void run() {
-									// TODO Auto-generated method stub
-									averageDistance.setText("nie puste");
-									/*
-									 * averageDistance.setText(String.format(
-									 * "%.2fm", sum / N));
-									 */
-								}
-							});
-						}
-					}).start();
-
-				} else
-					averageDistance.setText("puste");
+				if (getResult == false && beaconAdapter.getCount() != 0) {
+					getResult = true;
+					macAddress = new ArrayList<String>();
+					for (int position = 0; position < beaconAdapter.getCount(); position++)
+						macAddress.add(beaconAdapter.getItem(position)
+								.getMacAddress());
+					sumDistance = new Double[beaconAdapter.getCount()];
+					for (int i = 0; i < beaconAdapter.getCount(); i++)
+						sumDistance[i] = (double) 0;
+				}
 			}
 		});
 	}

@@ -27,10 +27,6 @@ public class BeaconAdapter extends BaseAdapter {
 		this.layoutResourceId = layoutResourceId;
 	}
 
-	public double getDistance() {
-		return distance;
-	}
-
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
@@ -42,8 +38,7 @@ public class BeaconAdapter extends BaseAdapter {
 		Beacon beacon = (Beacon) getItem(position);
 		holder.macTextView.setText(String.format("MAC: %s",
 				beacon.getMacAddress()));
-		distance = Utils.computeAccuracy(beacon);
-		holder.distanceTextView.setText(String.format("%.2fm", distance));
+		holder.distanceTextView.setText(String.format("%.2fm", Utils.computeAccuracy(beacon)));
 		holder.rssiTextView.setText(String.format("%ddBm", beacon.getRssi()));
 		holder.measuredPowerTextView.setText(String.format("%ddBm",
 				beacon.getMeasuredPower()));
@@ -57,15 +52,15 @@ public class BeaconAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public Beacon getItem(int arg0) {
+	public Beacon getItem(int position) {
 		// TODO Auto-generated method stub
-		return beacons.get(arg0);
+		return beacons.get(position);
 	}
 
 	@Override
-	public long getItemId(int arg0) {
+	public long getItemId(int position) {
 		// TODO Auto-generated method stub
-		return arg0;
+		return position;
 	}
 
 	public void replaceWith(Collection<Beacon> newBeacons) {
