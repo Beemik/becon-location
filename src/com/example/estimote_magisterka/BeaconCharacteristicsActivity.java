@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.connection.BeaconConnection;
@@ -14,7 +17,8 @@ public class BeaconCharacteristicsActivity extends Activity {
 
 	private Beacon beacon;
 	private BeaconConnection beaconConnection;
-	private View connectedView;
+	private View connectedView1;
+	private View connectedView2;
 	private TextView statusTextView;
 	private TextView nameTextView;
 	private TextView uuidTextView;
@@ -26,6 +30,13 @@ public class BeaconCharacteristicsActivity extends Activity {
 	private TextView hardwareVersionTextView;
 	private TextView softwareVersionTextView;
 
+	private Button minimumPower;
+	private Button averagePower;
+	private Button maximumPower;
+	private Button minimumInterval;
+	private Button averageInterval;
+	private Button maximumInterval;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,7 +45,8 @@ public class BeaconCharacteristicsActivity extends Activity {
 		beacon = getIntent().getParcelableExtra(LocateActivity.CLICKED_BEACON);
 		beaconConnection = new BeaconConnection(this, beacon,
 				createConnectionCallback());
-		connectedView = findViewById(R.id.conView);
+		connectedView1 = findViewById(R.id.conView1);
+		connectedView2 = findViewById(R.id.conView2);
 		statusTextView = (TextView) findViewById(R.id.textView1);
 
 		nameTextView = (TextView) findViewById(R.id.textView2);
@@ -46,6 +58,262 @@ public class BeaconCharacteristicsActivity extends Activity {
 		powerTextView = (TextView) findViewById(R.id.textView8);
 		hardwareVersionTextView = (TextView) findViewById(R.id.textView9);
 		softwareVersionTextView = (TextView) findViewById(R.id.textView10);
+
+		minimumPower = (Button) findViewById(R.id.button1);
+		averagePower = (Button) findViewById(R.id.button2);
+		maximumPower = (Button) findViewById(R.id.button3);
+		minimumInterval = (Button) findViewById(R.id.button4);
+		averageInterval = (Button) findViewById(R.id.button5);
+		maximumInterval = (Button) findViewById(R.id.button6);
+
+		minimumPower.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				beaconConnection.writeBroadcastingPower(-30,
+						new BeaconConnection.WriteCallback() {
+
+							@Override
+							public void onSuccess() {
+								// TODO Auto-generated method stub
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										Toast.makeText(getApplicationContext(),
+												"Broadcasting power updated.",
+												Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+
+							@Override
+							public void onError() {
+								// TODO Auto-generated method stub
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										Toast.makeText(getApplicationContext(),
+												"Broadcasting power error.",
+												Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+						});
+			}
+		});
+
+		averagePower.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				beaconConnection.writeBroadcastingPower(-12,
+						new BeaconConnection.WriteCallback() {
+
+							@Override
+							public void onSuccess() {
+								// TODO Auto-generated method stub
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										Toast.makeText(getApplicationContext(),
+												"Broadcasting power updated.",
+												Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+
+							@Override
+							public void onError() {
+								// TODO Auto-generated method stub
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										Toast.makeText(getApplicationContext(),
+												"Broadcasting power error.",
+												Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+						});
+			}
+		});
+
+		maximumPower.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				beaconConnection.writeBroadcastingPower(4,
+						new BeaconConnection.WriteCallback() {
+
+							@Override
+							public void onSuccess() {
+								// TODO Auto-generated method stub
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										Toast.makeText(getApplicationContext(),
+												"Broadcasting power updated.",
+												Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+
+							@Override
+							public void onError() {
+								// TODO Auto-generated method stub
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										Toast.makeText(getApplicationContext(),
+												"Broadcasting power error.",
+												Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+						});
+			}
+		});
+
+		minimumInterval.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				beaconConnection.writeAdvertisingInterval(1000,
+						new BeaconConnection.WriteCallback() {
+
+							@Override
+							public void onSuccess() {
+								// TODO Auto-generated method stub
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										Toast.makeText(
+												getApplicationContext(),
+												"Advertising interval updated.",
+												Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+
+							@Override
+							public void onError() {
+								// TODO Auto-generated method stub
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										Toast.makeText(getApplicationContext(),
+												"Advertising interval error.",
+												Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+						});
+			}
+		});
+
+		averageInterval.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				beaconConnection.writeAdvertisingInterval(200,
+						new BeaconConnection.WriteCallback() {
+
+							@Override
+							public void onSuccess() {
+								// TODO Auto-generated method stub
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										Toast.makeText(
+												getApplicationContext(),
+												"Advertising interval updated.",
+												Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+
+							@Override
+							public void onError() {
+								// TODO Auto-generated method stub
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										Toast.makeText(getApplicationContext(),
+												"Advertising interval error.",
+												Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+						});
+			}
+		});
+
+		maximumInterval.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				beaconConnection.writeAdvertisingInterval(50,
+						new BeaconConnection.WriteCallback() {
+
+							@Override
+							public void onSuccess() {
+								// TODO Auto-generated method stub
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										Toast.makeText(
+												getApplicationContext(),
+												"Advertising interval updated.",
+												Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+
+							@Override
+							public void onError() {
+								// TODO Auto-generated method stub
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										Toast.makeText(getApplicationContext(),
+												"Advertising interval error.",
+												Toast.LENGTH_LONG).show();
+									}
+								});
+							}
+						});
+			}
+		});
 	}
 
 	@Override
@@ -133,7 +401,8 @@ public class BeaconCharacteristicsActivity extends Activity {
 								+ beaconDetales.getHardwareVersion());
 						softwareVersionTextView.setText("Software version: "
 								+ beaconDetales.getSoftwareVersion());
-						connectedView.setVisibility(View.VISIBLE);
+						connectedView1.setVisibility(View.VISIBLE);
+						connectedView2.setVisibility(View.VISIBLE);
 					}
 				});
 			}

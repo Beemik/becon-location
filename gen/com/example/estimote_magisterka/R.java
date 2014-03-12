@@ -25,27 +25,36 @@ public final class R {
         public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int Row=0x7f080011;
-        public static final int action_settings=0x7f080013;
-        public static final int button1=0x7f08000e;
-        public static final int button2=0x7f080010;
-        public static final int conView=0x7f080002;
-        public static final int imageView1=0x7f080000;
-        public static final int item1=0x7f080014;
-        public static final int listView1=0x7f08000d;
-        public static final int listView2=0x7f08000f;
-        public static final int progressBar1=0x7f080012;
-        public static final int scrollView1=0x7f08000c;
-        public static final int textView1=0x7f080001;
-        public static final int textView10=0x7f08000b;
-        public static final int textView2=0x7f080003;
-        public static final int textView3=0x7f080004;
-        public static final int textView4=0x7f080005;
-        public static final int textView5=0x7f080006;
-        public static final int textView6=0x7f080007;
-        public static final int textView7=0x7f080008;
-        public static final int textView8=0x7f080009;
-        public static final int textView9=0x7f08000a;
+        public static final int Row=0x7f08001a;
+        public static final int action_settings=0x7f08001c;
+        public static final int button1=0x7f080010;
+        public static final int button2=0x7f080011;
+        public static final int button3=0x7f080012;
+        public static final int button4=0x7f080015;
+        public static final int button5=0x7f080016;
+        public static final int button6=0x7f080017;
+        public static final int conView1=0x7f080003;
+        public static final int conView2=0x7f08000d;
+        public static final int imageView1=0x7f080001;
+        public static final int item1=0x7f08001d;
+        public static final int linearLayout1=0x7f08000f;
+        public static final int linearLayout2=0x7f080014;
+        public static final int listView1=0x7f080018;
+        public static final int listView2=0x7f080019;
+        public static final int progressBar1=0x7f08001b;
+        public static final int scrollView1=0x7f080000;
+        public static final int textView1=0x7f080002;
+        public static final int textView10=0x7f08000c;
+        public static final int textView11=0x7f08000e;
+        public static final int textView12=0x7f080013;
+        public static final int textView2=0x7f080004;
+        public static final int textView3=0x7f080005;
+        public static final int textView4=0x7f080006;
+        public static final int textView5=0x7f080007;
+        public static final int textView6=0x7f080008;
+        public static final int textView7=0x7f080009;
+        public static final int textView8=0x7f08000a;
+        public static final int textView9=0x7f08000b;
     }
     public static final class layout {
         public static final int activity_beacon_characteristics=0x7f030000;
@@ -61,12 +70,17 @@ public final class R {
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
+        public static final int advertising_interval=0x7f05000a;
         public static final int app_name=0x7f050000;
+        public static final int average=0x7f05000c;
         public static final int beacon=0x7f050004;
+        public static final int broadcasting_power=0x7f050009;
         public static final int calibrate=0x7f050003;
         public static final int distance=0x7f050005;
         public static final int get_results=0x7f050008;
+        public static final int maximum=0x7f05000b;
         public static final int measured_power=0x7f050007;
+        public static final int minimum=0x7f05000d;
         public static final int rssi=0x7f050006;
         public static final int start_locating=0x7f050002;
     }
