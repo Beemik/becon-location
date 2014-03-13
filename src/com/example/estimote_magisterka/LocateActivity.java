@@ -77,7 +77,7 @@ public class LocateActivity extends Activity {
 							averageDistanceTextView.setText("czekaj..");
 							for (int i = 0; i < beaconCount; i++) {
 								for (int j = 0; j < beaconCount; j++) {
-									if (count == N)
+									if (count == beaconCount * N)
 										getResult = false;
 
 									else if (macAddress.get(j).equals(
@@ -92,7 +92,7 @@ public class LocateActivity extends Activity {
 											.format("czekaj.. %d", count));
 								}
 							}
-						} else if (count == N) {
+						} else if (count == beaconCount * N) {
 							count = 0;
 							ArrayList<String> tmpArrayList = new ArrayList<String>();
 							for (int i = 0; i < beaconCount; i++)
