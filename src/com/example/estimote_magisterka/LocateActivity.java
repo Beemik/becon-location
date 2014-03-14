@@ -1,11 +1,18 @@
 package com.example.estimote_magisterka;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -36,10 +43,12 @@ public class LocateActivity extends Activity {
 	private ListView averageDistanceListView;
 	private TextView averageDistanceTextView;
 
+	private Button readFile;
 	private boolean getResult;
 	private Double[] sumDistance;
 	private ArrayList<String> macAddress;
 	private int count = 0;
+	ArrayAdapter<String> adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +59,26 @@ public class LocateActivity extends Activity {
 		getResult = false;
 		averageDistanceListView = (ListView) findViewById(R.id.listView2);
 		averageDistanceTextView = (TextView) findViewById(R.id.textView1);
+		readFile = (Button) findViewById(R.id.button2);
 
 		beaconAdapter = new BeaconAdapter(this, R.layout.beacon);
 		final ListView beaconList = (ListView) findViewById(R.id.listView1);
 		beaconList.setAdapter(beaconAdapter);
 		beaconList.setOnItemClickListener(createOnItemClickListener());
 		getResultsButton = (Button) findViewById(R.id.button1);
+
+		readFile.setVisibility(View.VISIBLE);
+		readFile.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				ArrayList<String> tmp = readFromFile();
+				adapter = new ArrayAdapter<String>(getApplicationContext(),
+						R.layout.distance_row, tmp);
+				averageDistanceListView.setAdapter(adapter);
+			}
+		});
 
 		beaconManager = new BeaconManager(this);
 		beaconManager.setRangingListener(new BeaconManager.RangingListener() {
@@ -89,7 +112,8 @@ public class LocateActivity extends Activity {
 										count++;
 									}
 									averageDistanceTextView.setText(String
-											.format("czekaj.. %d", count));
+											.format("czekaj.. %d", count
+													/ beaconCount));
 								}
 							}
 						} else if (count == beaconCount * N) {
@@ -98,7 +122,8 @@ public class LocateActivity extends Activity {
 							for (int i = 0; i < beaconCount; i++)
 								tmpArrayList.add(String.format("%s : %.2fm",
 										macAddress.get(i), sumDistance[i] / N));
-							ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+							saveToFile(tmpArrayList);
+							adapter = new ArrayAdapter<String>(
 									getApplicationContext(),
 									R.layout.distance_row, tmpArrayList);
 
@@ -128,6 +153,48 @@ public class LocateActivity extends Activity {
 				}
 			}
 		});
+	}
+
+	private void saveToFile(ArrayList<String> data) {
+		try {
+
+			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+					openFileOutput("distance.txt", Context.MODE_PRIVATE));
+			for (int i = 0; i < data.size(); i++) {
+				outputStreamWriter.write(data.get(i)+"\n");
+			}
+			Toast.makeText(getApplicationContext(), "File saved.",
+					Toast.LENGTH_LONG).show();
+			outputStreamWriter.close();
+		} catch (IOException e) {
+			Toast.makeText(getApplicationContext(), "Cannot save file.",
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private ArrayList<String> readFromFile() {
+		ArrayList<String> readDistance = new ArrayList<String>();
+		try {
+			InputStream inputStream = openFileInput("distance.txt");
+			if (inputStream != null) {
+				InputStreamReader inputStreamReader = new InputStreamReader(
+						inputStream);
+				BufferedReader bufferedReader = new BufferedReader(
+						inputStreamReader);
+				String tmp = "";
+				while ((tmp = bufferedReader.readLine()) != null) {
+					readDistance.add(tmp);
+				}
+				inputStream.close();
+			}
+		} catch (FileNotFoundException e) {
+			Toast.makeText(getApplicationContext(), "File not found.",
+					Toast.LENGTH_LONG).show();
+		} catch (IOException e) {
+			Toast.makeText(getApplicationContext(), "Cannot read file.",
+					Toast.LENGTH_LONG).show();
+		}
+		return readDistance;
 	}
 
 	@Override

@@ -10,6 +10,7 @@
     <string name="rssi">RSSI:</string>
     <string name="measured_power">Measured power:</string>
     <string name="get_results">Get results</string>
+    <string name="read_file">Read file</string>
     <string name="broadcasting_power">Broadcasting power</string>
     <string name="advertising_interval">Advertising interval</string>
     <string name="maximum">Maximum</string>
