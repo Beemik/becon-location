@@ -67,7 +67,6 @@ public class LocateActivity extends Activity {
 		beaconList.setOnItemClickListener(createOnItemClickListener());
 		getResultsButton = (Button) findViewById(R.id.button1);
 
-		readFile.setVisibility(View.VISIBLE);
 		readFile.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -117,12 +116,12 @@ public class LocateActivity extends Activity {
 								}
 							}
 						} else if (count == beaconCount * N) {
-							count = 0;
 							ArrayList<String> tmpArrayList = new ArrayList<String>();
 							for (int i = 0; i < beaconCount; i++)
 								tmpArrayList.add(String.format("%s : %.2fm",
 										macAddress.get(i), sumDistance[i] / N));
-							saveToFile(tmpArrayList);
+							saveToFile(tmpArrayList, count/beaconCount);
+							count = 0;
 							adapter = new ArrayAdapter<String>(
 									getApplicationContext(),
 									R.layout.distance_row, tmpArrayList);
@@ -155,13 +154,13 @@ public class LocateActivity extends Activity {
 		});
 	}
 
-	private void saveToFile(ArrayList<String> data) {
+	private void saveToFile(ArrayList<String> data, int count) {
+		// SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
 		try {
-
 			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-					openFileOutput("distance.txt", Context.MODE_PRIVATE));
+					openFileOutput("distance.txt", Context.MODE_APPEND));
 			for (int i = 0; i < data.size(); i++) {
-				outputStreamWriter.write(data.get(i)+"\n");
+				outputStreamWriter.append(count + "values: " + data.get(i) + "\n");
 			}
 			Toast.makeText(getApplicationContext(), "File saved.",
 					Toast.LENGTH_LONG).show();
@@ -170,6 +169,7 @@ public class LocateActivity extends Activity {
 			Toast.makeText(getApplicationContext(), "Cannot save file.",
 					Toast.LENGTH_LONG).show();
 		}
+		// return simpleDateFormat.format(new Date());
 	}
 
 	private ArrayList<String> readFromFile() {
