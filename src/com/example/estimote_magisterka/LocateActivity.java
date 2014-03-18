@@ -102,7 +102,6 @@ public class LocateActivity extends Activity {
 						boolean error = false;
 
 						if (getResult == true) {
-							averageDistanceTextView.setText("czekaj..");
 							for (int i = 0; i < beaconCount; i++) {
 								if (error) {
 									getResult = false;
@@ -146,7 +145,7 @@ public class LocateActivity extends Activity {
 										getResult = false;
 									} else
 										averageDistanceTextView.setText(String
-												.format("czekaj.. %d",
+												.format("wait.. %d",
 														sumDistance[j]
 																.getCount()));
 								}
@@ -197,11 +196,6 @@ public class LocateActivity extends Activity {
 
 	private void saveToFile(ArrayList<String> data, int count) {
 		try {
-			// File file = Environment
-			// .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-			// file.mkdirs();
-			// FileOutputStream fileOutputStream = new FileOutputStream(new
-			// File(file + "distance.txt"));
 			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
 					openFileOutput("distance.txt", Context.MODE_APPEND));
 			for (int i = 0; i < data.size(); i++) {
