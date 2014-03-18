@@ -2,37 +2,43 @@ package com.example.estimote_magisterka;
 
 public class AveragesDistances {
 
-	private Double[] sumDistance;
-	private int[] count;
+	private Double sumDistance;
+	private int count;
+	private boolean end;
 
-	public AveragesDistances(int beaconCount) {
+	public AveragesDistances() {
 		super();
-		this.sumDistance = new Double[beaconCount];
-		this.count = new int[beaconCount];
-		for (int i = 0; i < this.sumDistance.length; i++) {
-			this.sumDistance[i] = (double) 0;
-			this.count[i] = 0;
-		}
+		this.end = false;
+		this.sumDistance = (double) 0;
+		this.count = 0;
 	}
 
-	public void incrementCount(int i) {
-		this.count[i]++;
+	public boolean getEnd() {
+		return end;
 	}
 
-	public Double getSumDistance(int i) {
-		return this.sumDistance[i];
+	public void setEnd(boolean end) {
+		this.end = end;
 	}
 
-	public void setSumDistance(int i, Double distance) {
-		this.sumDistance[i] += distance;
+	public void incrementCount() {
+		this.count++;
 	}
 
-	public int getCount(int i) {
-		return count[i];
+	public Double getSumDistance() {
+		return this.sumDistance;
 	}
 
-	public void setCount(int i, int count) {
-		this.count[i] = count;
+	public void setSumDistance(Double distance) {
+		this.sumDistance += distance;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 }

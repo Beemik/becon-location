@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -33,7 +32,6 @@ import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
 import com.estimote.sdk.Utils;
 
-@SuppressLint("NewApi")
 public class LocateActivity extends Activity {
 
 	public static final String CLICKED_BEACON = "clickedBeacon";
@@ -47,10 +45,11 @@ public class LocateActivity extends Activity {
 
 	private Button readFile;
 	private boolean getResult;
-	private Double[] sumDistance;
+	private AveragesDistances[] sumDistance;
 	private ArrayList<String> macAddress;
-	private int count = 0;
-	ArrayAdapter<String> adapter;
+	private ArrayAdapter<String> adapter;
+	private int all = 0;
+	private ArrayList<String> tmpArrayList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,34 +99,68 @@ public class LocateActivity extends Activity {
 
 						final int N = 5;
 						int beaconCount = beaconAdapter.getCount();
+						boolean error = false;
 
-						if (getResult == true && beaconCount != 0) {
+						if (getResult == true) {
 							averageDistanceTextView.setText("czekaj..");
 							for (int i = 0; i < beaconCount; i++) {
+								if (error) {
+									getResult = false;
+									break;
+								}
+								if (beaconCount != beaconAdapter.getCount()) {
+									error = true;
+									getResult = false;
+									averageDistanceTextView.setText("Error.");
+									break;
+								}
 								for (int j = 0; j < beaconCount; j++) {
-									if (count == beaconCount * N)
+									if (beaconAdapter.getCount() == 0) {
+										averageDistanceTextView
+												.setText("There are no beacons in range.");
+										error = true;
 										getResult = false;
-
-									else if (macAddress.get(j).equals(
-											beaconAdapter.getItem(i)
-													.getMacAddress())) {
-										sumDistance[j] += Utils
-												.computeAccuracy(beaconAdapter
-														.getItem(i));
-										count++;
+										break;
 									}
-									averageDistanceTextView.setText(String
-											.format("czekaj.. %d", count
-													/ beaconCount));
+									if (sumDistance[j].getCount() == N
+											&& sumDistance[j].getEnd() == false) {
+										tmpArrayList.add(String.format(
+												"%s : %.2fm",
+												macAddress.get(j),
+												sumDistance[j].getSumDistance()
+														/ N));
+										sumDistance[j].setEnd(true);
+										all++;
+									}
+
+									else if (sumDistance[j].getCount() != N
+											&& macAddress.get(j).equals(
+													beaconAdapter.getItem(i)
+															.getMacAddress())) {
+										sumDistance[j].setSumDistance(Utils
+												.computeAccuracy(beaconAdapter
+														.getItem(i)));
+										sumDistance[j].incrementCount();
+									}
+									if (all == beaconCount) {
+										getResult = false;
+									} else
+										averageDistanceTextView.setText(String
+												.format("czekaj.. %d",
+														sumDistance[j]
+																.getCount()));
 								}
 							}
-						} else if (count == beaconCount * N) {
-							ArrayList<String> tmpArrayList = new ArrayList<String>();
-							for (int i = 0; i < beaconCount; i++)
-								tmpArrayList.add(String.format("%s : %.2fm",
-										macAddress.get(i), sumDistance[i] / N));
-							saveToFile(tmpArrayList, count / beaconCount);
-							count = 0;
+						} else if (all > 0) {
+							for (int i = 0; i < beaconCount; i++) {
+								if (sumDistance[i].getEnd() == true) {
+									saveToFile(tmpArrayList,
+											sumDistance[i].getCount());
+									sumDistance[i].setCount(0);
+								}
+
+							}
+							all = 0;
 							adapter = new ArrayAdapter<String>(
 									getApplicationContext(),
 									R.layout.distance_row, tmpArrayList);
@@ -146,15 +179,17 @@ public class LocateActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				tmpArrayList = new ArrayList<String>();
 				if (getResult == false && beaconAdapter.getCount() != 0) {
 					getResult = true;
 					macAddress = new ArrayList<String>();
-					for (int position = 0; position < beaconAdapter.getCount(); position++)
+					sumDistance = new AveragesDistances[beaconAdapter
+							.getCount()];
+					for (int position = 0; position < beaconAdapter.getCount(); position++) {
 						macAddress.add(beaconAdapter.getItem(position)
 								.getMacAddress());
-					sumDistance = new Double[beaconAdapter.getCount()];
-					for (int i = 0; i < beaconAdapter.getCount(); i++)
-						sumDistance[i] = (double) 0;
+						sumDistance[position] = new AveragesDistances();
+					}
 				}
 			}
 		});
@@ -162,10 +197,11 @@ public class LocateActivity extends Activity {
 
 	private void saveToFile(ArrayList<String> data, int count) {
 		try {
-			//File file = Environment
-			//		.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-			//file.mkdirs();
-			//FileOutputStream fileOutputStream = new FileOutputStream(new File(file + "distance.txt"));
+			// File file = Environment
+			// .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+			// file.mkdirs();
+			// FileOutputStream fileOutputStream = new FileOutputStream(new
+			// File(file + "distance.txt"));
 			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
 					openFileOutput("distance.txt", Context.MODE_APPEND));
 			for (int i = 0; i < data.size(); i++) {
