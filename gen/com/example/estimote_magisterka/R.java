@@ -76,7 +76,6 @@ public final class R {
         public static final int average=0x7f05000d;
         public static final int beacon=0x7f050004;
         public static final int broadcasting_power=0x7f05000a;
-        public static final int calibrate=0x7f050003;
         public static final int distance=0x7f050005;
         public static final int get_results=0x7f050008;
         public static final int maximum=0x7f05000c;
@@ -84,6 +83,7 @@ public final class R {
         public static final int minimum=0x7f05000e;
         public static final int read_file=0x7f050009;
         public static final int rssi=0x7f050006;
+        public static final int send=0x7f050003;
         public static final int start_locating=0x7f050002;
     }
     public static final class style {

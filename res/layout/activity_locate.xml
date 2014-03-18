@@ -30,7 +30,8 @@
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/read_file" />
+                android:text="@string/read_file"
+                android:visibility="gone" />
 
         </LinearLayout>
 

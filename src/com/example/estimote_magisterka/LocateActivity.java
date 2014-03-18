@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -32,6 +33,7 @@ import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
 import com.estimote.sdk.Utils;
 
+@SuppressLint("NewApi")
 public class LocateActivity extends Activity {
 
 	public static final String CLICKED_BEACON = "clickedBeacon";
@@ -66,6 +68,10 @@ public class LocateActivity extends Activity {
 		beaconList.setAdapter(beaconAdapter);
 		beaconList.setOnItemClickListener(createOnItemClickListener());
 		getResultsButton = (Button) findViewById(R.id.button1);
+
+		// InputStream inputStream = openFileInput("distance.txt");
+		// readFile.setVisibility(View.VISIBLE);
+		readFile.setVisibility(View.VISIBLE);
 
 		readFile.setOnClickListener(new OnClickListener() {
 
@@ -120,7 +126,7 @@ public class LocateActivity extends Activity {
 							for (int i = 0; i < beaconCount; i++)
 								tmpArrayList.add(String.format("%s : %.2fm",
 										macAddress.get(i), sumDistance[i] / N));
-							saveToFile(tmpArrayList, count/beaconCount);
+							saveToFile(tmpArrayList, count / beaconCount);
 							count = 0;
 							adapter = new ArrayAdapter<String>(
 									getApplicationContext(),
@@ -155,12 +161,16 @@ public class LocateActivity extends Activity {
 	}
 
 	private void saveToFile(ArrayList<String> data, int count) {
-		// SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
 		try {
+			//File file = Environment
+			//		.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+			//file.mkdirs();
+			//FileOutputStream fileOutputStream = new FileOutputStream(new File(file + "distance.txt"));
 			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
 					openFileOutput("distance.txt", Context.MODE_APPEND));
 			for (int i = 0; i < data.size(); i++) {
-				outputStreamWriter.append(count + "values: " + data.get(i) + "\n");
+				outputStreamWriter.append(count + "values: " + data.get(i)
+						+ "\n");
 			}
 			Toast.makeText(getApplicationContext(), "File saved.",
 					Toast.LENGTH_LONG).show();
@@ -169,7 +179,6 @@ public class LocateActivity extends Activity {
 			Toast.makeText(getApplicationContext(), "Cannot save file.",
 					Toast.LENGTH_LONG).show();
 		}
-		// return simpleDateFormat.format(new Date());
 	}
 
 	private ArrayList<String> readFromFile() {
