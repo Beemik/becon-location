@@ -47,7 +47,10 @@ public class MainActivity extends Activity {
 				emailIntent.putExtra(Intent.EXTRA_SUBJECT,
 						"beacon location [auto_generated]");
 				try {
-					File file = new File("distance.txt");
+					File dir = new File(android.os.Environment
+							.getExternalStorageDirectory().getAbsolutePath() + "/Documents");
+					dir.mkdirs();
+					File file = new File(dir, "distance.txt");
 					if (!file.exists())
 						Toast.makeText(getApplicationContext(),
 								"There is no file to send.", Toast.LENGTH_LONG)

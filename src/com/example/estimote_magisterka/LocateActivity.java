@@ -1,18 +1,20 @@
 package com.example.estimote_magisterka;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -124,7 +126,8 @@ public class LocateActivity extends Activity {
 									if (sumDistance[j].getCount() == N
 											&& sumDistance[j].getEnd() == false) {
 										tmpArrayList.add(String.format(
-												"%s : %.2fm",
+												"%d  values: %s : %.2fm",
+												sumDistance[j].getCount(),
 												macAddress.get(j),
 												sumDistance[j].getSumDistance()
 														/ N));
@@ -151,10 +154,9 @@ public class LocateActivity extends Activity {
 								}
 							}
 						} else if (all > 0) {
+							saveToFile(tmpArrayList);
 							for (int i = 0; i < beaconCount; i++) {
 								if (sumDistance[i].getEnd() == true) {
-									saveToFile(tmpArrayList,
-											sumDistance[i].getCount());
 									sumDistance[i].setCount(0);
 								}
 
@@ -194,17 +196,26 @@ public class LocateActivity extends Activity {
 		});
 	}
 
-	private void saveToFile(ArrayList<String> data, int count) {
+	private void saveToFile(ArrayList<String> data) {
+		File dir = new File(android.os.Environment
+				.getExternalStorageDirectory().getAbsolutePath() + "/Documents");
+		dir.mkdirs();
+		File file = new File(dir, "distance.txt");
 		try {
-			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-					openFileOutput("distance.txt", Context.MODE_APPEND));
-			for (int i = 0; i < data.size(); i++) {
-				outputStreamWriter.append(count + "values: " + data.get(i)
-						+ "\n");
+			if (!file.exists()) {
+				file.createNewFile();
 			}
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
+					file, true));
+			for (int i = 0; i < data.size(); i++) {
+				bufferedWriter.append(data.get(i) + "\n");
+			}
+			bufferedWriter.close();
 			Toast.makeText(getApplicationContext(), "File saved.",
 					Toast.LENGTH_LONG).show();
-			outputStreamWriter.close();
+		} catch (FileNotFoundException e) {
+			Toast.makeText(getApplicationContext(), "File not found.",
+					Toast.LENGTH_LONG).show();
 		} catch (IOException e) {
 			Toast.makeText(getApplicationContext(), "Cannot save file.",
 					Toast.LENGTH_LONG).show();
@@ -213,19 +224,21 @@ public class LocateActivity extends Activity {
 
 	private ArrayList<String> readFromFile() {
 		ArrayList<String> readDistance = new ArrayList<String>();
+		File dir = new File(android.os.Environment
+				.getExternalStorageDirectory().getAbsolutePath() + "/Documents");
+		dir.mkdirs();
+		File file = new File(dir, "distance.txt");
 		try {
-			InputStream inputStream = openFileInput("distance.txt");
-			if (inputStream != null) {
-				InputStreamReader inputStreamReader = new InputStreamReader(
-						inputStream);
-				BufferedReader bufferedReader = new BufferedReader(
-						inputStreamReader);
-				String tmp = "";
-				while ((tmp = bufferedReader.readLine()) != null) {
-					readDistance.add(tmp);
-				}
-				inputStream.close();
+			FileInputStream fileInputStream = new FileInputStream(file);
+			DataInputStream dataInputStream = new DataInputStream(
+					fileInputStream);
+			BufferedReader bufferedReader = new BufferedReader(
+					new InputStreamReader(dataInputStream));
+			String tmp = "";
+			while ((tmp = bufferedReader.readLine()) != null) {
+				readDistance.add(tmp);
 			}
+			dataInputStream.close();
 		} catch (FileNotFoundException e) {
 			Toast.makeText(getApplicationContext(), "File not found.",
 					Toast.LENGTH_LONG).show();
