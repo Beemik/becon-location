@@ -124,7 +124,7 @@ public class LocateActivity extends Activity {
 									if (sumDistance[j].getCount() == N
 											&& sumDistance[j].getEnd() == false) {
 										tmpArrayList.add(String
-												.format("%d  values: %s : %.2fm; RSSI: %.2fdBm",
+												.format("%d  values; %s : %.2fm; RSSI: %ddBm",
 														sumDistance[j]
 																.getCount(),
 														macAddress.get(j),

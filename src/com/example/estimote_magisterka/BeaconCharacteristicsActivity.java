@@ -88,7 +88,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
-										saveToFile("Broadcasting power: -30\n");
+										saveToFile("Broadcasting power: -30");
 										Toast.makeText(getApplicationContext(),
 												"Broadcasting power updated.",
 												Toast.LENGTH_LONG).show();
@@ -130,7 +130,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
-										saveToFile("Broadcasting power: -12\n");
+										saveToFile("Broadcasting power: -12");
 										Toast.makeText(getApplicationContext(),
 												"Broadcasting power updated.",
 												Toast.LENGTH_LONG).show();
@@ -172,7 +172,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
-										saveToFile("Broadcasting power: 4\n");
+										saveToFile("Broadcasting power: 4");
 										Toast.makeText(getApplicationContext(),
 												"Broadcasting power updated.",
 												Toast.LENGTH_LONG).show();
@@ -214,7 +214,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
-										saveToFile("Advertising interval: 1s\n");
+										saveToFile("Advertising interval: 1s");
 										Toast.makeText(
 												getApplicationContext(),
 												"Advertising interval updated.",
@@ -257,7 +257,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
-										saveToFile("Advertising interval: 0.2s\n");
+										saveToFile("Advertising interval: 0.2s");
 										Toast.makeText(
 												getApplicationContext(),
 												"Advertising interval updated.",
@@ -300,7 +300,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
-										saveToFile("Advertising interval: 50ms\n");
+										saveToFile("Advertising interval: 50ms");
 										Toast.makeText(
 												getApplicationContext(),
 												"Advertising interval updated.",
