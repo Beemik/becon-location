@@ -70,8 +70,6 @@ public class LocateActivity extends Activity {
 		beaconList.setOnItemClickListener(createOnItemClickListener());
 		getResultsButton = (Button) findViewById(R.id.button1);
 
-		// InputStream inputStream = openFileInput("distance.txt");
-		// readFile.setVisibility(View.VISIBLE);
 		readFile.setVisibility(View.VISIBLE);
 
 		readFile.setOnClickListener(new OnClickListener() {
@@ -125,12 +123,17 @@ public class LocateActivity extends Activity {
 									}
 									if (sumDistance[j].getCount() == N
 											&& sumDistance[j].getEnd() == false) {
-										tmpArrayList.add(String.format(
-												"%d  values: %s : %.2fm",
-												sumDistance[j].getCount(),
-												macAddress.get(j),
-												sumDistance[j].getSumDistance()
-														/ N));
+										tmpArrayList.add(String
+												.format("%d  values: %s : %.2fm; RSSI: %.2fdBm",
+														sumDistance[j]
+																.getCount(),
+														macAddress.get(j),
+														sumDistance[j]
+																.getSumDistance()
+																/ N,
+														sumDistance[j]
+																.getSumRSSI()
+																/ N));
 										sumDistance[j].setEnd(true);
 										all++;
 									}
@@ -142,6 +145,7 @@ public class LocateActivity extends Activity {
 										sumDistance[j].setSumDistance(Utils
 												.computeAccuracy(beaconAdapter
 														.getItem(i)));
+										sumDistance[j].setSumRSSI(beaconAdapter.getItem(i).getRssi());
 										sumDistance[j].incrementCount();
 									}
 									if (all == beaconCount) {

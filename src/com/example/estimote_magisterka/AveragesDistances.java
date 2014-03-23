@@ -3,6 +3,7 @@ package com.example.estimote_magisterka;
 public class AveragesDistances {
 
 	private Double sumDistance;
+	private int sumRSSI;
 	private int count;
 	private boolean end;
 
@@ -10,6 +11,7 @@ public class AveragesDistances {
 		super();
 		this.end = false;
 		this.sumDistance = (double) 0;
+		this.sumRSSI = 0;
 		this.count = 0;
 	}
 
@@ -31,6 +33,14 @@ public class AveragesDistances {
 
 	public void setSumDistance(Double distance) {
 		this.sumDistance += distance;
+	}
+
+	public int getSumRSSI() {
+		return this.sumRSSI;
+	}
+
+	public void setSumRSSI(int rssi) {
+		this.sumRSSI += rssi;
 	}
 
 	public int getCount() {

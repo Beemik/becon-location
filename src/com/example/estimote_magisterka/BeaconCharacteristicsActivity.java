@@ -1,5 +1,11 @@
 package com.example.estimote_magisterka;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -82,6 +88,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
+										saveToFile("Broadcasting power: -30\n");
 										Toast.makeText(getApplicationContext(),
 												"Broadcasting power updated.",
 												Toast.LENGTH_LONG).show();
@@ -123,6 +130,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
+										saveToFile("Broadcasting power: -12\n");
 										Toast.makeText(getApplicationContext(),
 												"Broadcasting power updated.",
 												Toast.LENGTH_LONG).show();
@@ -164,6 +172,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
+										saveToFile("Broadcasting power: 4\n");
 										Toast.makeText(getApplicationContext(),
 												"Broadcasting power updated.",
 												Toast.LENGTH_LONG).show();
@@ -205,6 +214,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
+										saveToFile("Advertising interval: 1s\n");
 										Toast.makeText(
 												getApplicationContext(),
 												"Advertising interval updated.",
@@ -247,6 +257,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
+										saveToFile("Advertising interval: 0.2s\n");
 										Toast.makeText(
 												getApplicationContext(),
 												"Advertising interval updated.",
@@ -289,6 +300,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 									@Override
 									public void run() {
 										// TODO Auto-generated method stub
+										saveToFile("Advertising interval: 50ms\n");
 										Toast.makeText(
 												getApplicationContext(),
 												"Advertising interval updated.",
@@ -314,6 +326,30 @@ public class BeaconCharacteristicsActivity extends Activity {
 						});
 			}
 		});
+	}
+	
+	private void saveToFile(String text) {
+		File dir = new File(android.os.Environment
+				.getExternalStorageDirectory().getAbsolutePath() + "/Documents");
+		dir.mkdirs();
+		File file = new File(dir, "distance.txt");
+		try {
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
+					file, true));
+			bufferedWriter.append(text + "\n");
+			bufferedWriter.close();
+			Toast.makeText(getApplicationContext(), "File saved.",
+					Toast.LENGTH_LONG).show();
+		} catch (FileNotFoundException e) {
+			Toast.makeText(getApplicationContext(), "File not found.",
+					Toast.LENGTH_LONG).show();
+		} catch (IOException e) {
+			Toast.makeText(getApplicationContext(), "Cannot save file.",
+					Toast.LENGTH_LONG).show();
+		}
 	}
 
 	@Override
