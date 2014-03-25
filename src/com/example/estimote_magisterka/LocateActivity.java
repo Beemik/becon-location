@@ -26,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class LocateActivity extends Activity {
 	private ListView averageDistanceListView;
 	private TextView averageDistanceTextView;
 
+	private EditText count;
 	private Button readFile;
 	private boolean getResult;
 	private AveragesValues[] averageValues;
@@ -71,6 +73,7 @@ public class LocateActivity extends Activity {
 		getResult = false;
 		averageDistanceListView = (ListView) findViewById(R.id.listView2);
 		averageDistanceTextView = (TextView) findViewById(R.id.textView1);
+		count = (EditText) findViewById(R.id.editText1);
 		readFile = (Button) findViewById(R.id.button2);
 
 		// adapter for list of beacons
@@ -113,9 +116,11 @@ public class LocateActivity extends Activity {
 
 						// seting list of beacons
 						beaconAdapter.replaceWith(arg1);
-
+						int N = 50;
 						// number of distance and RSSI values to average
-						final int N = 5;
+						if (count.getText().toString().equals("") == false) {
+							N = Integer.parseInt(count.getText().toString());
+						}
 						int beaconCount = beaconAdapter.getCount();
 						// to know that is an error when average distance and
 						// RSSI
