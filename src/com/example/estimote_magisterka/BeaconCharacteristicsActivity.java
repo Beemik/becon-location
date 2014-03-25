@@ -19,6 +19,7 @@ import com.estimote.sdk.Beacon;
 import com.estimote.sdk.connection.BeaconConnection;
 import com.estimote.sdk.connection.BeaconConnection.BeaconCharacteristics;
 
+//class to get beacons characteristics
 public class BeaconCharacteristicsActivity extends Activity {
 
 	private Beacon beacon;
@@ -43,6 +44,8 @@ public class BeaconCharacteristicsActivity extends Activity {
 	private Button averageInterval;
 	private Button maximumInterval;
 
+	// connect objects with layout and determine what to do if buttons are
+	// pressed
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -327,16 +330,19 @@ public class BeaconCharacteristicsActivity extends Activity {
 			}
 		});
 	}
-	
+
+	// saving string to file, ex. broadcasting power, advertising interval
 	private void saveToFile(String text) {
 		File dir = new File(android.os.Environment
 				.getExternalStorageDirectory().getAbsolutePath() + "/Documents");
 		dir.mkdirs();
 		File file = new File(dir, "distance.txt");
 		try {
+			// create new file if doesn't exist
 			if (!file.exists()) {
 				file.createNewFile();
 			}
+			// saving string
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
 					file, true));
 			bufferedWriter.append(text + "\n");
@@ -352,6 +358,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 		}
 	}
 
+	// user can step backward in action bar
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
@@ -362,6 +369,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	// when display is off and user turn in back on app connecting with beacon
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -372,6 +380,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 		}
 	}
 
+	// when move to another activity beacon connection is closed
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
@@ -379,9 +388,11 @@ public class BeaconCharacteristicsActivity extends Activity {
 		super.onDestroy();
 	}
 
+	// method to determine what to do in several of cases
 	private BeaconConnection.ConnectionCallback createConnectionCallback() {
 		return new BeaconConnection.ConnectionCallback() {
 
+			// when disconected draw text
 			@Override
 			public void onDisconnected() {
 				// TODO Auto-generated method stub
@@ -396,6 +407,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 				});
 			}
 
+			// when authentication error draw text
 			@Override
 			public void onAuthenticationError() {
 				// TODO Auto-generated method stub
@@ -410,6 +422,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 
 			}
 
+			// when connected to beacon display its characteristics
 			@Override
 			public void onAuthenticated(
 					final BeaconCharacteristics beaconDetales) {

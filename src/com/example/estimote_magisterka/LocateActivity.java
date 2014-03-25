@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -34,8 +35,11 @@ import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
 import com.estimote.sdk.Utils;
 
+//class with list of beacons
+//can get averarage distance and RSSI from each beacon and then save them to file in available for user storage
 public class LocateActivity extends Activity {
 
+	// holds position of clicked beacon for another class
 	public static final String CLICKED_BEACON = "clickedBeacon";
 	private static final int REQUEST_ENABLE_BT = 0;
 	private Region beaconsRegion = new Region("regionId", null, null, null);
@@ -47,10 +51,12 @@ public class LocateActivity extends Activity {
 
 	private Button readFile;
 	private boolean getResult;
-	private AveragesDistances[] sumDistance;
+	private AveragesValues[] averageValues;
 	private ArrayList<String> macAddress;
 	private ArrayAdapter<String> adapter;
+	// determine how much beacons ends average
 	private int all = 0;
+	// list of beacons that are ended calculate average distance and RSSI
 	private ArrayList<String> tmpArrayList;
 
 	@Override
@@ -59,12 +65,18 @@ public class LocateActivity extends Activity {
 		setContentView(R.layout.activity_locate);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
+		// keep screen on when this activity is on
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 		getResult = false;
 		averageDistanceListView = (ListView) findViewById(R.id.listView2);
 		averageDistanceTextView = (TextView) findViewById(R.id.textView1);
 		readFile = (Button) findViewById(R.id.button2);
 
+		// adapter for list of beacons
 		beaconAdapter = new BeaconAdapter(this, R.layout.beacon);
+
+		// list of available beacons
 		final ListView beaconList = (ListView) findViewById(R.id.listView1);
 		beaconList.setAdapter(beaconAdapter);
 		beaconList.setOnItemClickListener(createOnItemClickListener());
@@ -85,8 +97,11 @@ public class LocateActivity extends Activity {
 		});
 
 		beaconManager = new BeaconManager(this);
+
+		// method to which discovered beacons in range
 		beaconManager.setRangingListener(new BeaconManager.RangingListener() {
 
+			// when discovered beacon
 			@Override
 			public void onBeaconsDiscovered(Region arg0, final List<Beacon> arg1) {
 				// TODO Auto-generated method stub
@@ -95,18 +110,26 @@ public class LocateActivity extends Activity {
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
+
+						// seting list of beacons
 						beaconAdapter.replaceWith(arg1);
 
+						// number of distance and RSSI values to average
 						final int N = 5;
 						int beaconCount = beaconAdapter.getCount();
+						// to know that is an error when average distance and
+						// RSSI
 						boolean error = false;
 
+						// if button to start average is pressed
 						if (getResult == true) {
 							for (int i = 0; i < beaconCount; i++) {
+								// if error stop average
 								if (error) {
 									getResult = false;
 									break;
 								}
+								// if number of beacons is change stop average
 								if (beaconCount != beaconAdapter.getCount()) {
 									error = true;
 									getResult = false;
@@ -114,6 +137,7 @@ public class LocateActivity extends Activity {
 									break;
 								}
 								for (int j = 0; j < beaconCount; j++) {
+									// if there are no beacons stop average
 									if (beaconAdapter.getCount() == 0) {
 										averageDistanceTextView
 												.setText("There are no beacons in range.");
@@ -121,47 +145,66 @@ public class LocateActivity extends Activity {
 										getResult = false;
 										break;
 									}
-									if (sumDistance[j].getCount() == N
-											&& sumDistance[j].getEnd() == false) {
+									// if some of beacons ended average, they
+									// are excluded from further calculations in
+									// this course
+									if (averageValues[j].getCount() == N
+											&& averageValues[j].getEnd() == false) {
+										// add beacon to list of correctly
+										// average beacons
 										tmpArrayList.add(String
 												.format("%d  values; %s : %.2fm; RSSI: %ddBm",
-														sumDistance[j]
+														averageValues[j]
 																.getCount(),
 														macAddress.get(j),
-														sumDistance[j]
+														averageValues[j]
 																.getSumDistance()
 																/ N,
-														sumDistance[j]
+														averageValues[j]
 																.getSumRSSI()
 																/ N));
-										sumDistance[j].setEnd(true);
+										// sets beacons like excluded from
+										// further calculations in
+										// this course
+										averageValues[j].setEnd(true);
 										all++;
 									}
 
-									else if (sumDistance[j].getCount() != N
+									// calculate average distance and RSSI
+									else if (averageValues[j].getCount() != N
 											&& macAddress.get(j).equals(
 													beaconAdapter.getItem(i)
 															.getMacAddress())) {
-										sumDistance[j].setSumDistance(Utils
+										averageValues[j].setSumDistance(Utils
 												.computeAccuracy(beaconAdapter
 														.getItem(i)));
-										sumDistance[j].setSumRSSI(beaconAdapter.getItem(i).getRssi());
-										sumDistance[j].incrementCount();
+										averageValues[j]
+												.setSumRSSI(beaconAdapter
+														.getItem(i).getRssi());
+										// increment number of averaging
+										// distance and RSSI
+										averageValues[j].incrementCount();
 									}
+									// if all beacons ended, course is ended
 									if (all == beaconCount) {
 										getResult = false;
-									} else
+									}
+									// draw counter number
+									else
 										averageDistanceTextView.setText(String
 												.format("wait.. %d",
-														sumDistance[j]
+														averageValues[j]
 																.getCount()));
 								}
 							}
-						} else if (all > 0) {
+						}
+						// if course ended and there are beacons that ends save
+						// them to file and reset all variables
+						else if (all > 0) {
 							saveToFile(tmpArrayList);
 							for (int i = 0; i < beaconCount; i++) {
-								if (sumDistance[i].getEnd() == true) {
-									sumDistance[i].setCount(0);
+								if (averageValues[i].getEnd() == true) {
+									averageValues[i].setCount(0);
 								}
 
 							}
@@ -179,28 +222,38 @@ public class LocateActivity extends Activity {
 			}
 		});
 
+		// sets all needed variables to start average distance and RSSI
 		getResultsButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				tmpArrayList = new ArrayList<String>();
+
+				// if there are good conditions to start average sets variables
 				if (getResult == false && beaconAdapter.getCount() != 0) {
+					// initialize list with ended beacons
+					tmpArrayList = new ArrayList<String>();
+					// button is pressed
 					getResult = true;
+					// initialize list with available beacons mac address
 					macAddress = new ArrayList<String>();
-					sumDistance = new AveragesDistances[beaconAdapter
-							.getCount()];
+					// list of average distance is set with number of beacons in
+					// range
+					averageValues = new AveragesValues[beaconAdapter.getCount()];
+					// getting mac address and putting it to list
 					for (int position = 0; position < beaconAdapter.getCount(); position++) {
 						macAddress.add(beaconAdapter.getItem(position)
 								.getMacAddress());
-						sumDistance[position] = new AveragesDistances();
+						averageValues[position] = new AveragesValues();
 					}
 				}
 			}
 		});
 	}
 
+	// save to file list of string
 	private void saveToFile(ArrayList<String> data) {
+		// specify path
 		File dir = new File(android.os.Environment
 				.getExternalStorageDirectory().getAbsolutePath() + "/Documents");
 		dir.mkdirs();
@@ -226,7 +279,9 @@ public class LocateActivity extends Activity {
 		}
 	}
 
+	// read file from memory
 	private ArrayList<String> readFromFile() {
+		// specify path
 		ArrayList<String> readDistance = new ArrayList<String>();
 		File dir = new File(android.os.Environment
 				.getExternalStorageDirectory().getAbsolutePath() + "/Documents");
@@ -253,6 +308,7 @@ public class LocateActivity extends Activity {
 		return readDistance;
 	}
 
+	// adding possibility to step backward in action bar
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
@@ -262,6 +318,7 @@ public class LocateActivity extends Activity {
 		return true;
 	}
 
+	// user can step backward in action bar
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
@@ -272,6 +329,7 @@ public class LocateActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	// connect to BeaconService, start ranging and monitoring
 	void connectWithBeacon() {
 		beaconAdapter.replaceWith(Collections.<Beacon> emptyList());
 		beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
@@ -290,6 +348,7 @@ public class LocateActivity extends Activity {
 		});
 	}
 
+	// when restarting this activity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
@@ -303,6 +362,7 @@ public class LocateActivity extends Activity {
 		}
 	}
 
+	// when activity starts app check if user has possibility to use this app
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
@@ -323,6 +383,7 @@ public class LocateActivity extends Activity {
 		}
 	}
 
+	// stop ranging beacons
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
@@ -336,6 +397,7 @@ public class LocateActivity extends Activity {
 		super.onStop();
 	}
 
+	// stop ranging and monitoring beacons
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
@@ -343,6 +405,7 @@ public class LocateActivity extends Activity {
 		super.onDestroy();
 	}
 
+	// when user clicked on beacon
 	private AdapterView.OnItemClickListener createOnItemClickListener() {
 		return new AdapterView.OnItemClickListener() {
 
@@ -352,7 +415,9 @@ public class LocateActivity extends Activity {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(getApplicationContext(),
 						BeaconCharacteristicsActivity.class);
+				// puts beacon position
 				intent.putExtra(CLICKED_BEACON, beaconAdapter.getItem(position));
+				// starting activity with beacon characteristics
 				startActivity(intent);
 			}
 

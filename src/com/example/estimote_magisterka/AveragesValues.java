@@ -1,13 +1,14 @@
 package com.example.estimote_magisterka;
 
-public class AveragesDistances {
+//class to measure average distance and RSSI
+public class AveragesValues {
 
 	private Double sumDistance;
 	private int sumRSSI;
 	private int count;
 	private boolean end;
 
-	public AveragesDistances() {
+	public AveragesValues() {
 		super();
 		this.end = false;
 		this.sumDistance = (double) 0;
@@ -31,6 +32,7 @@ public class AveragesDistances {
 		return this.sumDistance;
 	}
 
+	// add distance value to variable
 	public void setSumDistance(Double distance) {
 		this.sumDistance += distance;
 	}
@@ -39,6 +41,7 @@ public class AveragesDistances {
 		return this.sumRSSI;
 	}
 
+	// add RSSI value to variable
 	public void setSumRSSI(int rssi) {
 		this.sumRSSI += rssi;
 	}
