@@ -16,7 +16,7 @@ import com.estimote.sdk.Utils;
 //class which is an adapter for list of beacons, becouse list isn't standard, has a lot of fields in one row
 public class BeaconAdapter extends BaseAdapter {
 
-	int layoutResourceId; // sets layout to display
+	private int layoutResourceId; // sets layout to display
 	private LayoutInflater inflater;
 	private ArrayList<Beacon> beacons;
 
