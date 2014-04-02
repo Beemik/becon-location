@@ -94,7 +94,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 										saveToFile("Broadcasting power: -30");
 										Toast.makeText(getApplicationContext(),
 												"Broadcasting power updated.",
-												Toast.LENGTH_LONG).show();
+												Toast.LENGTH_SHORT).show();
 									}
 								});
 							}
@@ -136,7 +136,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 										saveToFile("Broadcasting power: -12");
 										Toast.makeText(getApplicationContext(),
 												"Broadcasting power updated.",
-												Toast.LENGTH_LONG).show();
+												Toast.LENGTH_SHORT).show();
 									}
 								});
 							}
@@ -178,7 +178,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 										saveToFile("Broadcasting power: 4");
 										Toast.makeText(getApplicationContext(),
 												"Broadcasting power updated.",
-												Toast.LENGTH_LONG).show();
+												Toast.LENGTH_SHORT).show();
 									}
 								});
 							}
@@ -221,7 +221,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 										Toast.makeText(
 												getApplicationContext(),
 												"Advertising interval updated.",
-												Toast.LENGTH_LONG).show();
+												Toast.LENGTH_SHORT).show();
 									}
 								});
 							}
@@ -264,7 +264,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 										Toast.makeText(
 												getApplicationContext(),
 												"Advertising interval updated.",
-												Toast.LENGTH_LONG).show();
+												Toast.LENGTH_SHORT).show();
 									}
 								});
 							}
@@ -307,7 +307,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 										Toast.makeText(
 												getApplicationContext(),
 												"Advertising interval updated.",
-												Toast.LENGTH_LONG).show();
+												Toast.LENGTH_SHORT).show();
 									}
 								});
 							}
@@ -348,7 +348,7 @@ public class BeaconCharacteristicsActivity extends Activity {
 			bufferedWriter.append(text + "\n");
 			bufferedWriter.close();
 			Toast.makeText(getApplicationContext(), "File saved.",
-					Toast.LENGTH_LONG).show();
+					Toast.LENGTH_SHORT).show();
 		} catch (FileNotFoundException e) {
 			Toast.makeText(getApplicationContext(), "File not found.",
 					Toast.LENGTH_LONG).show();

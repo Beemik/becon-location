@@ -168,10 +168,15 @@ public class LocateActivity extends Activity {
 														averageValues[j]
 																.getSumRSSI()
 																/ N));
+										saveToFile(averageValues[j]
+												.getStringTab1(), "values.txt");
+										saveToFile(averageValues[j]
+												.getStringTab2(), "values.txt");
 										// sets beacons like excluded from
 										// further calculations in
 										// this course
 										averageValues[j].setEnd(true);
+										averageValues[j].reset();
 										all++;
 									}
 
@@ -206,7 +211,7 @@ public class LocateActivity extends Activity {
 						// if course ended and there are beacons that ends save
 						// them to file and reset all variables
 						else if (all > 0) {
-							saveToFile(tmpArrayList);
+							saveToFile(tmpArrayList, "distance.txt");
 							for (int i = 0; i < beaconCount; i++) {
 								if (averageValues[i].getEnd() == true) {
 									averageValues[i].setCount(0);
@@ -257,12 +262,12 @@ public class LocateActivity extends Activity {
 	}
 
 	// save to file list of string
-	private void saveToFile(ArrayList<String> data) {
+	private void saveToFile(ArrayList<String> data, String name) {
 		// specify path
 		File dir = new File(android.os.Environment
 				.getExternalStorageDirectory().getAbsolutePath() + "/Documents");
 		dir.mkdirs();
-		File file = new File(dir, "distance.txt");
+		File file = new File(dir, name);
 		try {
 			if (!file.exists()) {
 				file.createNewFile();
@@ -272,9 +277,10 @@ public class LocateActivity extends Activity {
 			for (int i = 0; i < data.size(); i++) {
 				bufferedWriter.append(data.get(i) + "\n");
 			}
+			bufferedWriter.append("\n");
 			bufferedWriter.close();
 			Toast.makeText(getApplicationContext(), "File saved.",
-					Toast.LENGTH_LONG).show();
+					Toast.LENGTH_SHORT).show();
 		} catch (FileNotFoundException e) {
 			Toast.makeText(getApplicationContext(), "File not found.",
 					Toast.LENGTH_LONG).show();
